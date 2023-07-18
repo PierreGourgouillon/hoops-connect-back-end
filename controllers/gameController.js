@@ -54,3 +54,25 @@ exports.gameFinish = async (req, res, next) => {
         });
     }
 }
+
+exports.getAllGames = async (req, res, next) => {
+    const games = await Game.find()
+
+    const gamesResult = games.filter((game) => {
+        if (game.playerId === req.user.firebaseId) {
+            return game;
+        }
+    })
+
+    if (gamesResult.length === 0) {
+        res.status(200).json({
+            error: null,
+            data: null
+        });
+    }
+
+    res.status(200).json({
+        error: null,
+        data: gamesResult
+    });
+};
